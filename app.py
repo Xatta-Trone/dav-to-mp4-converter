@@ -75,11 +75,22 @@ def convertSingleFile(file,idx):
     totalComplete.set(f"{idx}/{len(files)} files converted")
 
 def generateOutputFilePath(inputPath):
-    fileNameTemp = os.path.basename(inputPath).split('/')[-1]
-    tmp = fileNameTemp.replace(".dav",".mp4")
-    outputFileName = os.path.join(output_folder_path.get(),tmp)
-    print(outputFileName)
-    return outputFileName
+    # fileNameTemp2 = inputPath.split(folder_path.get())
+    # print('fileNameTemp2')
+    # print(fileNameTemp2,inputPath,folder_path.get(),output_folder_path.get())
+    # fileNameTemp = os.path.basename(inputPath).split('/')[-1]
+    # tmp = fileNameTemp.replace(".dav",".mp4")
+    # outputFileName = os.path.join(output_folder_path.get(),tmp)
+    # print(outputFileName)
+    
+    p = inputPath
+    q = folder_path.get()
+    r = output_folder_path.get()
+
+    result = p.replace('\\','/').replace(q,r).replace(".dav",".mp4").replace('/','\\')
+    
+    create_directory(os.path.dirname(result))
+    return result
 
             
 def check_ffmpeg():
@@ -93,8 +104,15 @@ def check_install(*args):
                     stderr=subprocess.STDOUT)
         return True
     except OSError as e:
-        return False  
+        return False
 
+def create_directory(directory):
+   try:
+      os.makedirs(directory,exist_ok=True)
+      print(f"Directory '{directory}' created successfully")
+   except OSError as e:
+      print(f"Error: {e}")
+      
 files = []
 completedFiles = 0
 
